@@ -5,6 +5,8 @@ namespace App\Http\Controllers\TeacherEval;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TeacherEval\Answer;
+use App\Models\TeacherEval\AnswerQuestion;
+use App\Models\TeacherEval\Question;
 use App\Models\Ignug\Catalogue;
 use App\Models\Ignug\State;
 use Illuminate\Database\Eloquent\Builder;
@@ -73,6 +75,16 @@ class AnswerController extends Controller
         $answer->status()->associate($status);
         $answer->save();
 
+        $answerQuestionHasAnswer = AnswerQuestion::firstWhere("answer_id",Answer::firstWhere('code',$dataAnswer['code'])->id);
+        $questions = Question::where('status_id', $status->id)->get();
+        if(!$answerQuestionHasAnswer&& sizeof($questions)!==0){
+            $questionsIds = array();
+            $status = Catalogue::where('type','STATUS')->Where('code','1')->first();
+            foreach ($questions as $question) {
+                array_push($questionsIds,$question->id);
+            }
+            $answer->questions()->attach( $questionsIds); 
+        }
         if (!$answer) {
             return response()->json([
                 'data' => null,
