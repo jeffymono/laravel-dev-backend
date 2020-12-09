@@ -13,9 +13,7 @@ class AnswerController extends Controller
 {
     public function index()
     {
-        $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
-        $state = State::firstWhere('code', $catalogues['state']['type']['active']);
-        $answers = Answer::with('status')->where('state_id',$state->id)->get();
+        $answers = Answer::with('status')->get();
 
         if (sizeof($answers)=== 0) {
             return response()->json([
@@ -32,7 +30,6 @@ class AnswerController extends Controller
                 'detail' => 'Se consultó correctamente respuestas',
                 'code' => '200',
             ]], 200);
-
     }
 
     public function show($id)
@@ -54,10 +51,10 @@ class AnswerController extends Controller
                 'detail' => 'Se consultó correctamente respuesta',
                 'code' => '200',
             ]], 200);
-    }  
+    }
 
-    public function store(Request $request){
-
+    public function store(Request $request)
+    {
         $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
         $data = $request->json()->all();
 
@@ -91,7 +88,6 @@ class AnswerController extends Controller
                 'detail' => 'Se creó correctamente las respuestas',
                 'code' => '201',
             ]], 201);
-
     }
 
     public function update(Request $request, $id)
@@ -153,6 +149,4 @@ class AnswerController extends Controller
                 'code' => '201',
             ]], 201);
     }
-
-
 }

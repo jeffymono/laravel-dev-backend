@@ -23,14 +23,14 @@ class SelfEvaluationController extends Controller
         $data = $request->json()->all();
         
         $dataAnswerQuestions = $data['answer_questions'];
-        $teacher = Teacher::firstWhere('user_id',1 /* $request->user_id */);// user_id viene de un interceptor
+        $teacher = Teacher::firstWhere('user_id', $request->user_id);// user_id viene de un interceptor
         $state = State::firstWhere('code', $catalogues['state']['type']['active']);
-        $schoolPeriod = SchoolPeriod::firstWhere('status_id', 1);//El 1 es Temporal
-        /*         $from = date('2020-10-27');
-                $to = date('2021-04-27'); */
+        $schoolPeriod = SchoolPeriod::firstWhere('status_id', Catalogue::where('type', 'STATUS')->Where('code', '1')->first()->id);//El id del status es Temporal
+        /*                 $from = date('2020-12-01');
+                        $to = date('2021-06-01'); */
         //Obetenemos las fechas de inicio y fin del periodo para valiadar la obtencion de respuestas de selfEvaluation.
-        $startDatePeriod = date(SchoolPeriod::firstWhere('status_id', 1)->start_date);
-        $endDatePeriod = date(SchoolPeriod::firstWhere('status_id', 1)->end_date);
+        $startDatePeriod = date($schoolPeriod->start_date);
+        $endDatePeriod = date($schoolPeriod->end_date);
 
         $evaluationTypeTeaching = EvaluationType::firstWhere('code', '3');
         $evaluationTypeManagement = EvaluationType::firstWhere('code', '4');

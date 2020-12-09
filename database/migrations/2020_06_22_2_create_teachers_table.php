@@ -15,7 +15,6 @@ class CreateTeachersTable extends Migration
             $table->foreignId('teaching_ladder_id')->constrained('catalogues');
             $table->foreignId('dedication_time_id')->constrained('catalogues');
             $table->string('academic_unit')->nullable();
-            $table->string('academic_unit')->nullable();
             $table->integer('tolta_subjects')->nullable();
             $table->integer('hours_worked')->comment('horas laboradas en la semana')->nullable();
             $table->integer('class_hours')->comment('horas clase en la semana')->nullable();
@@ -26,7 +25,7 @@ class CreateTeachersTable extends Migration
             $table->boolean('technical')->comment('el docente da clases en carreras tecnicas')->default(false);
             $table->boolean('technology')->comment('el docente da clases en carreras tecnlogicas')->default(false);
             $table->boolean('sabbatical')->comment('el docente esta en periodo sabatico')->default(false);
-            $table->date('sabbatical_start')->comment('fecha inicio periodo sabatico')->default(false);
+            $table->date('sabbatical_start')->comment('fecha inicio periodo sabatico')->nullable();
             $table->foreignId('higher_education_id')->comment('el docente esta cursando estudios superiores escoger')->nullable()->constrained('catalogues');
             $table->string('institution_higher_education')->comment('nombre de la institucion de los estudios superiores')->default('NA');
             $table->foreignId('country_higher_education_id')->comment('pais de los estudios superiores')->nullable()->constrained('catalogues');
