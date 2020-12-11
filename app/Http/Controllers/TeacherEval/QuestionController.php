@@ -16,10 +16,7 @@ class QuestionController extends Controller
 {
     public function index()
     {
-        $catalogues = json_decode(file_get_contents(storage_path(). '/catalogues.json'), true);
-        $state = State::where('code', $catalogues['state']['type']['active'])->first();
-
-        $questions = Question::with('status', 'type', 'evaluationType')->where('state_id',$state->id)->get();
+        $questions = Question::with('status', 'type', 'evaluationType')->get();
 
         if (sizeof($questions)=== 0) {
             return response()->json([
@@ -61,7 +58,6 @@ class QuestionController extends Controller
     public function store(Request $request){
 
         $catalogues = json_decode(file_get_contents(storage_path(). '/catalogues.json'), true);
-
         $data = $request->json()->all();
 
        $dataQuestion = $data['question'];
@@ -87,7 +83,7 @@ class QuestionController extends Controller
         $question->save();
 
         $answersIds = array();
-        $catalogueStatus = Catalogue::where('type','STATUS')->Where('code','1')->first();
+        $catalogueStatus = Catalogue::where('type','STATUS')->Where('code','AVAILABLE')->first();
         $answers = Answer::where('status_id', $catalogueStatus->id)
         ->get();
         foreach ($answers as $answer) {

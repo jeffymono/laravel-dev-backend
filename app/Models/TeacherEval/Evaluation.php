@@ -9,15 +9,22 @@ use App\Models\Ignug\Catalogue;
 use App\Models\Ignug\SchoolPeriod;
 use App\Models\Ignug\Teacher;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Traits\StatusActiveTrait;
+use App\Traits\StatusDeletedTrait;
 
 class Evaluation extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
+    use StatusActiveTrait;
+    use StatusDeletedTrait;
     use HasFactory;
 
     protected $connection = 'pgsql-teacher-eval';
+    protected $table = 'teacher_eval.evaluations';
+
     protected $fillable=[
-        'result'
+        'result',
+        'percentage'
     ];
 
     public function teacher()

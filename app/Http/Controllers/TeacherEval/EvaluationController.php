@@ -16,11 +16,8 @@ class EvaluationController extends Controller
 {
     public function index()
     {
-        $catalogues = json_decode(file_get_contents(storage_path() . '/catalogues.json'), true);
-        $state = State::where('code', $catalogues['state']['type']['active'])->first();
-
         $evaluations = Evaluation::with('teacher', 'evaluationType', 'status', 'detailEvaluations', 'schoolPeriod')
-            ->where('state_id', $state->id)->get();
+            ->get();
 
         if (sizeof($evaluations) === 0) {
             return response()->json([
