@@ -212,6 +212,46 @@ class EvaluationController extends Controller
             ]], 201);
     }
 
+    public function updateEvaluationAuthorityEvaluator()
+    {
+        $evaluationTypeTeaching = EvaluationType::firstWhere('code', '9');
+        $evaluationTypeManagement = EvaluationType::firstWhere('code', '10');
+
+        $teachers = Teacher::get();
+        foreach ($teachers as $teacher) {
+            $evaluations = Evaluation::where('school_period_id', 1)->where('teacher_id', $teacher->id)
+                ->where(function ($query) use ($evaluationTypeTeaching, $evaluationTypeManagement) {
+                    $query->where('evaluation_type_id', $evaluationTypeTeaching->id)
+                        ->OrWhere('evaluation_type_id', $evaluationTypeManagement->id);
+                })
+                ->get();
+            foreach ($evaluations as $evaluation) {
+                $result = 0;
+                foreach ($evaluation->detailEvaluations as $detailEvaluation) {
+                    $result += $detailEvaluation->result;
+                }
+                $evaluation->result = $result / sizeOf($evaluation->detailEvaluations);
+                $evaluation->save();
+            }
+        }
+
+        if (!$evaluation) {
+            return response()->json([
+                'data' => null,
+                'msg' => [
+                    'summary' => 'Evaluación no creada',
+                    'detail' => 'Intenta de nuevo',
+                    'code' => '404',
+                ]], 404);
+        }
+        return response()->json(['data' => $evaluation,
+            'msg' => [
+                'summary' => 'Evaluación creada',
+                'detail' => 'Se creó correctamente evaluación',
+                'code' => '201',
+            ]], 201);
+    }
+
     public function registeredSelfEvaluation(Request $request)
     {
         $evaluationTypeTeaching = EvaluationType::firstWhere('code', '3');
