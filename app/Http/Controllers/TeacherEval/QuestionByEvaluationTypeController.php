@@ -55,7 +55,6 @@ class QuestionByEvaluationTypeController extends Controller
             ->orWhere('evaluation_type_id', $evaluationTypeGestion->id)
             ->get();
             
-        return $question;
 
         if (sizeof($question) === 0) {
             return response()->json([
