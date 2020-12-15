@@ -83,7 +83,7 @@ class QuestionController extends Controller
         $question->save();
 
         $answersIds = array();
-        $catalogueStatus = Catalogue::where('type','STATUS')->Where('code','AVAILABLE')->first();
+        $catalogueStatus = Catalogue::where('type','STATUS')->Where('code','1')->first();
         $answers = Answer::where('status_id', $catalogueStatus->id)
         ->get();
         foreach ($answers as $answer) {

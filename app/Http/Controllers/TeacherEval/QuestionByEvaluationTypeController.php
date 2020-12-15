@@ -80,14 +80,14 @@ class QuestionByEvaluationTypeController extends Controller
 
         $evaluationTypeDocencia = EvaluationType::where('code', '7')->first();
         $evaluationTypeGestion = EvaluationType::where('code', '8')->first();
-        $state = State::where('code', $catalogues['state']['type']['active'])->first();
+        $status = Catalogue::where('type', 'STATUS')->Where('code', '1')->first();
 
-        $question = Question::with(['answers' => function ($query) use ($state) {
-            $query->where('state_id', $state->id);
+        $question = Question::with(['evaluationType','answers' => function ($query) use ($status) {
+            $query->where('status_id', $status->id);
         }])
             ->where('evaluation_type_id', $evaluationTypeDocencia->id)
             ->orWhere('evaluation_type_id', $evaluationTypeGestion->id)
-            ->where('state_id', $state->id)
+            ->where('status_id', $status->id)
             ->get();
 
         if (sizeof($question) === 0) {
@@ -102,7 +102,7 @@ class QuestionByEvaluationTypeController extends Controller
         return response()->json(['data' => $question,
             'msg' => [
                 'summary' => 'Preguntas',
-                'detail' => 'Se consultó correctamente Preguntas',
+                'detail' => 'Se consultó correctamente preguntas',
                 'code' => '200',
             ]], 200);
     }
