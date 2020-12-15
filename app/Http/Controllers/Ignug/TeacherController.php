@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Authentication\User;
 use App\Models\Ignug\Image;
 use App\Models\Ignug\Teacher;
+use App\Models\Ignug\State;
 use Illuminate\Http\Request;
 
 class TeacherController extends Controller
@@ -17,7 +18,24 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        //
+        $state = State::where('code','1')->first();
+        $teachers = Teacher::with('state', 'user')->where('state_id', $state->id)->get();
+        
+        if (sizeof($teachers)=== 0) {
+            return response()->json([
+                'data' => null,
+                'msg' => [
+                    'summary' => 'Docentes no encontrados',
+                    'detail' => 'Intenta de nuevo',
+                    'code' => '404'
+                ]], 404);
+        }
+        return response()->json(['data' => $teachers,
+            'msg' => [
+                'summary' => 'Docentes',
+                'detail' => 'Se consulto correctamente preguntas',
+                'code' => '200',
+            ]], 200);
     }
 
     /**

@@ -7,10 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Ignug\State;
 use App\Models\Ignug\Authority;
+use App\Traits\StatusActiveTrait;
+use App\Traits\StatusDeletedTrait;
 
 class PairResult extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
+    use StatusActiveTrait;
+    use StatusDeletedTrait;
     use HasFactory;
 
     protected $connection = 'pgsql-teacher-eval';

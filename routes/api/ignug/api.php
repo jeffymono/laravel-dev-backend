@@ -22,8 +22,9 @@ Route::group(['prefix' => 'images'], function () {
     Route::get('avatars', [ImageController::class, 'getAvatar']);
     Route::post('avatars', [ImageController::class, 'createAvatar']);
 });
-
+/*
 Route::group(['prefix' => 'teachers'], function () {
     Route::post('upload_image', [TeacherController::class, 'uploadImage']);
-});
+});*/
+Route::apiResource('teachers', TeacherController::class);
 
