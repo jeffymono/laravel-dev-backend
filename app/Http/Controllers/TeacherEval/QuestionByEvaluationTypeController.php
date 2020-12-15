@@ -54,20 +54,22 @@ class QuestionByEvaluationTypeController extends Controller
             ->where('evaluation_type_id', $evaluationTypeDocencia->id)
             ->orWhere('evaluation_type_id', $evaluationTypeGestion->id)
             ->get();
+            
+        return $question;
 
         if (sizeof($question) === 0) {
             return response()->json([
                 'data' => null,
                 'msg' => [
-                    'summary' => 'Preguntas no encontradas',
+                    'summary' => 'No se han creado preguntas y respuestas para el formulario',
                     'detail' => 'Intenta de nuevo',
                     'code' => '404',
                 ]], 404);
         }
         return response()->json(['data' => $question,
             'msg' => [
-                'summary' => 'Preguntas',
-                'detail' => 'Se consultó correctamente Preguntas',
+                'summary' => 'Formulario',
+                'detail' => 'Se consultó correctamente el formulario',
                 'code' => '200',
             ]], 200);
     }
