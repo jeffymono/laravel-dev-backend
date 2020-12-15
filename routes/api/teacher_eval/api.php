@@ -34,9 +34,11 @@ Route::get('catalogues', [CatalogueController::class, 'index']);
 Route::get('types_questions/self_evaluations', [QuestionByEvaluationTypeController::class, 'selfEvaluation']);
 Route::get('types_questions/student_evaluations', [QuestionByEvaluationTypeController::class, 'studentEvaluation']);
 Route::get('types_questions/pair_evaluations', [QuestionByEvaluationTypeController::class, 'pairEvaluation']);
+Route::get('types_questions/authorities', [QuestionByEvaluationTypeController::class, 'authorityEvaluation']);
 
 Route::post('evaluations/student_evaluations',[StudentEvaluationController::class, 'calculateResults']);
 Route::post('evaluations/pair_evaluations',[EvaluationController::class,'updateEvaluationPair']);
+Route::post('evaluations/authorities',[EvaluationController::class,'updateEvaluationAuthorityEvaluator']);
 
 
 

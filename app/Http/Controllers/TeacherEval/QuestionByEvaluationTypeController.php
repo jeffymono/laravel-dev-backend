@@ -106,4 +106,36 @@ class QuestionByEvaluationTypeController extends Controller
                 'code' => '200',
             ]], 200);
     }
+    public function authorityEvaluation()
+    {
+        $catalogues = json_decode(file_get_contents(storage_path(). '/catalogues.json'), true);
+
+        $evaluationTypeDocencia = EvaluationType::where('code', '9')->first();
+        $evaluationTypeGestion = EvaluationType::where('code', '10')->first();
+        $state = State::where('code', $catalogues['state']['type']['active'])->first();
+
+        $question = Question::with(['answers' => function ($query) use ($state) {
+            $query->where('state_id', $state->id);
+        }])
+            ->where('evaluation_type_id', $evaluationTypeDocencia->id)
+            ->orWhere('evaluation_type_id', $evaluationTypeGestion->id)
+            ->where('state_id', $state->id)
+            ->get();
+
+        if (sizeof($question) === 0) {
+            return response()->json([
+                'data' => null,
+                'msg' => [
+                    'summary' => 'Preguntas no encontradas',
+                    'detail' => 'Intenta de nuevo',
+                    'code' => '404',
+                ]], 404);
+        }
+        return response()->json(['data' => $question,
+            'msg' => [
+                'summary' => 'Preguntas',
+                'detail' => 'Se consultó correctamente Preguntas',
+                'code' => '200',
+            ]], 200);
+    }
 }
