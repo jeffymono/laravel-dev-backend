@@ -5,6 +5,8 @@ namespace App\Http\Controllers\TeacherEval;
 use App\Http\Controllers\Controller;
 use App\Models\TeacherEval\EvaluationType;
 use App\Models\Ignug\State;
+use App\Models\Ignug\Catalogue;
+
 use Illuminate\Http\Request;
 
 class EvaluationTypeController extends Controller
@@ -43,11 +45,14 @@ class EvaluationTypeController extends Controller
 
     public function store(Request $request)
     {
+        $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
+
        $data = $request->json()->all();
 
-       $dataEvaluationType = $data['evaluationtype'];
-       $dataState = $data['state'];
-       $dataParentCode = $data['parent_code'];
+       $dataEvaluationType = $data['evaluationType'];
+       //$dataParentCode = $data['parent_code'];
+       $state = State::firstWhere('code', $catalogues['state']['type']['active']);
+       $dataStatus= $data['status'];
 
         $evaluationType = new EvaluationType();
         $evaluationType->code = $dataEvaluationType['code'];
@@ -55,56 +60,77 @@ class EvaluationTypeController extends Controller
         $evaluationType->percentage = $dataEvaluationType['percentage'];
         $evaluationType->global_percentage = $dataEvaluationType['global_percentage'];
 
-        $state = State::findOrFail($dataState['id']);
-        $parentCode = EvaluationType::find($dataParentCode['id']);
+        $status = Catalogue::find($dataStatus['id']);
+        //$parentCode = EvaluationType::find($dataParentCode['id']);
 
+        $evaluationType->status()->associate($status);
         $evaluationType->state()->associate($state);
-        if (!$parentCode) {
-            $evaluationType->parent_id = null;
-        }else{
-            $evaluationType->parent()->associate($parentCode);
-        }
+        // if (!$parentCode) {
+        //     $evaluationType->parent_id = null;
+        // }else{
+        //     $evaluationType->parent()->associate($parentCode);
+        // }
 
         $evaluationType->save();
-
-        return response()->json([
-        'data' => [
-            'evaluationTypes' => $evaluationType
-        ]
-    ], 201);
+        if (!$evaluationType) {
+            return response()->json([
+                'data' => null,
+                'msg' => [
+                    'summary' => 'Tipo de Evaluacion no encontrada',
+                    'detail' => 'Intenta de nuevo',
+                    'code' => '404'
+                ]], 404);
+        }
+        return response()->json(['data' => $evaluationType,
+            'msg' => [
+                'summary' => 'Tipo de Evaluación',
+                'detail' => 'Se creó correctamente el tipo de evaluación',
+                'code' => '201',
+            ]], 201);
     }
 
     public function update(Request $request, $id)
     {
+        $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
+
         $data = $request->json()->all();
+        $dataEvaluationType = $data['evaluationType'];
+        $dataStatus= $data['status'];
+        //$dataParentCode = $data['parent_code'];
 
-        $dataEvaluationType = $data['evaluationtype'];
-        $dataParentCode = $data['parent_code'];
-        $dataState = $data['state'];
-
+        $state = State::firstWhere('code', $catalogues['state']['type']['active']);
+        $status = Catalogue::find($dataStatus['id']);
         $evaluationType = EvaluationType::findOrFail($id);
         $evaluationType->code = $dataEvaluationType['code'];
         $evaluationType->name = $dataEvaluationType['name'];
         $evaluationType->percentage = $dataEvaluationType['percentage'];
         $evaluationType->global_percentage = $dataEvaluationType['global_percentage'];
 
-        $parentCode = EvaluationType::find($dataParentCode['id']);
-        $state = State::findOrFail($dataState['id']);
-
-        if (!$parentCode) {
-            $evaluationType->parent_id = null;
-        }else{
-            $evaluationType->parent()->associate($parentCode);
-        }
-
+        // $parentCode = EvaluationType::find($dataParentCode['id']);
+                // if (!$parentCode) {
+        //     $evaluationType->parent_id = null;
+        // }else{
+        //     $evaluationType->parent()->associate($parentCode);
+        // }
+        $evaluationType->status()->associate($status);
         $evaluationType->state()->associate($state);
 
         $evaluationType->save();
-        return response()->json([
-            'data' => [
-                'evaluationTypes' => $evaluationType
-            ]
-        ], 201);
+        if (!$evaluationType) {
+            return response()->json([
+                'data' => null,
+                'msg' => [
+                    'summary' => 'Tipo de Evaluacion no encontrada',
+                    'detail' => 'Intenta de nuevo',
+                    'code' => '404'
+                ]], 404);
+        }
+        return response()->json(['data' => $evaluationType,
+            'msg' => [
+                'summary' => 'Tipo de Evaluación',
+                'detail' => 'Se actualizó correctamente el tipo de evaluación',
+                'code' => '201',
+            ]], 201);
     }
 
     public function destroy($id)
