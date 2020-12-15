@@ -15,7 +15,7 @@ class DetailEvaluationController extends Controller
 {
     public function index(Request $request)
     {
-        $detailEvaluations = DetailEvaluation::with('evaluation')->where('detail_evaluationable_id', $request->detail_evaluationable_id)
+        $detailEvaluations = DetailEvaluation::with('evaluation')->where('detail_evaluationable_id', $request->user_id)
             ->where('result', null)->get();
 
         if (sizeof($detailEvaluations) !== 0) {
