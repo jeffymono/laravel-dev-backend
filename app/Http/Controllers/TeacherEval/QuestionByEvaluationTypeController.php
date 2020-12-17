@@ -50,13 +50,26 @@ class QuestionByEvaluationTypeController extends Controller
         $evaluationTypeDocencia = EvaluationType::where('code', '5')->first();
         $evaluationTypeGestion = EvaluationType::where('code', '6')->first();
 
-        $question = Question::with('answers')
-            ->where('evaluation_type_id', $evaluationTypeDocencia->id)
-            ->orWhere('evaluation_type_id', $evaluationTypeGestion->id)
+        $status = Catalogue::where('type', 'STATUS')->Where('code', '1')->first();
+
+        $questions = Question::with(['evaluationType', 'answers' => function ($query) use ($status) {
+            $query->where('status_id', $status->id)
+                ->orderBy('order');
+        }])
+            ->where('status_id', $status->id)
+            ->where(function ($query) use ($evaluationTypeDocencia, $evaluationTypeGestion) {
+                $query->where('evaluation_type_id', $evaluationTypeDocencia->id)
+                    ->orWhere('evaluation_type_id', $evaluationTypeGestion->id);
+            })
+            ->orderBy('order')
             ->get();
+        // $question = Question::with('answers')
+        //     ->where('evaluation_type_id', $evaluationTypeDocencia->id)
+        //     ->orWhere('evaluation_type_id', $evaluationTypeGestion->id)
+        //     ->get();
             
 
-        if (sizeof($question) === 0) {
+        if (sizeof($questions) === 0) {
             return response()->json([
                 'data' => null,
                 'msg' => [
@@ -65,7 +78,7 @@ class QuestionByEvaluationTypeController extends Controller
                     'code' => '404',
                 ]], 404);
         }
-        return response()->json(['data' => $question,
+        return response()->json(['data' => $questions,
             'msg' => [
                 'summary' => 'Formulario',
                 'detail' => 'Se consultó correctamente el formulario',

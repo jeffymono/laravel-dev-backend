@@ -62,7 +62,6 @@ class EvaluationTypeController extends Controller
 
         $status = Catalogue::find($dataStatus['id']);
         //$parentCode = EvaluationType::find($dataParentCode['id']);
-
         $evaluationType->status()->associate($status);
         $evaluationType->state()->associate($state);
         // if (!$parentCode) {
@@ -74,12 +73,21 @@ class EvaluationTypeController extends Controller
         $evaluationType->save();
         if (!$evaluationType) {
             return response()->json([
-                'data' => null,
+                'data' <> null ,
                 'msg' => [
-                    'summary' => 'Tipo de Evaluacion no encontrada',
+                    'summary' => 'Datos Repetidos',
                     'detail' => 'Intenta de nuevo',
-                    'code' => '404'
-                ]], 404);
+                    'code' => '400'
+                ]], 400);
+            // return response()->json([
+            //     'data' => null,
+            //     'msg' => [
+            //         'summary' => 'Tipo de Evaluacion no encontrada',
+            //         'detail' => 'Intenta de nuevo',
+            //         'code' => '404'
+            //     ]], 404);
+                
+                
         }
         return response()->json(['data' => $evaluationType,
             'msg' => [

@@ -122,20 +122,19 @@ class StudentEvaluationController extends Controller
     }
     
 
-    //Metodo para guardar en la tabla evaluations.
-    public function calculateResults( Request $request ){
+    //Metodo para calcular.
+    public function calculateResults( Request $request){
         //$schoolPeriod= SchoolPeriod::firstWhere('status_id',1);
-        $schoolPeriod= SchoolPeriod::where('status_id',Catalogue::where('code','1')->where('type','STATUS'))->first();
+        $status = Catalogue::where('code','1')->where('type','STATUS')->first()->id;
+        $schoolPeriod= SchoolPeriod::firstWhere('status_id',$status);      
         $teachers= Teacher::get();
+        
         $evaluationTypeDocencia = EvaluationType::firstWhere('code','5');  //docencia
         $evaluationTypeGestion = EvaluationType::firstWhere('code','6');  //gestion
-
-        
         foreach($teachers as $teacher){
             $subjectTeachers = SubjectTeacher::where('school_period_id',$schoolPeriod->id)
             ->where('teacher_id',$teacher->id)
             ->get();            
-        
 
             $resultadoDocencia=0;
             $resultadoGestion=0;
