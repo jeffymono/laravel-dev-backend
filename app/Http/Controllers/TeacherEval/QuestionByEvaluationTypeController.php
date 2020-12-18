@@ -67,7 +67,6 @@ class QuestionByEvaluationTypeController extends Controller
         //     ->where('evaluation_type_id', $evaluationTypeDocencia->id)
         //     ->orWhere('evaluation_type_id', $evaluationTypeGestion->id)
         //     ->get();
-            
 
         if (sizeof($questions) === 0) {
             return response()->json([
@@ -96,11 +95,11 @@ class QuestionByEvaluationTypeController extends Controller
 
         $question = Question::with(['evaluationType', 'answers' => function ($query) use ($status) {
             $query->where('status_id', $status->id);
-        }])
-            ->where('evaluation_type_id', $evaluationTypeDocencia->id)
-            ->orWhere('evaluation_type_id', $evaluationTypeGestion->id)
-            ->where('status_id', $status->id)
-            ->get();
+        }])->where('status_id', $status->id)
+            ->where(function ($query) use ($evaluationTypeDocencia, $evaluationTypeGestion) {
+                $query->where('evaluation_type_id', $evaluationTypeDocencia->id)
+                    ->orWhere('evaluation_type_id', $evaluationTypeGestion->id);
+            })->get();
 
         if (sizeof($question) === 0) {
             return response()->json([
