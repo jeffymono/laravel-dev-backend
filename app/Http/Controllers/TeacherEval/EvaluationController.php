@@ -146,15 +146,13 @@ class EvaluationController extends Controller
     {
         $evaluation = Evaluation::findOrFail($id);
 
-        $evaluation->state_id = '3';
+        $evaluation->state_id = '2';
         $evaluation->save();
 
-        $detailEvaluations = DetailEvaluation::firstWhere('evaluation_id', $id)->get();
-        foreach ($detailEvaluations as $detailEvaluation) {
-            $detailEvaluation->state_id = '3';
-            $detailEvaluation->save();
-        }
-
+        $detailEvaluation = DetailEvaluation::Where('evaluation_id', $id)->first();
+        $detailEvaluation->state_id = '2';
+        $detailEvaluation->save();
+       
         if (!$evaluation) {
             return response()->json([
                 'data' => null,

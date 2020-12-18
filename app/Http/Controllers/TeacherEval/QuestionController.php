@@ -153,7 +153,7 @@ class QuestionController extends Controller
     public function destroy($id)
     {
         $question = Question::findOrFail($id);
-        $question->state_id = '3';
+        $question->state_id = '2';
         $question->save();
 
         if (!$question) {
