@@ -20,7 +20,7 @@ class EvaluationTypeController extends Controller
             return response()->json([
                 'data' => null,
                 'msg' => [
-                    'summary' => 'Catalogos no encontrando',
+                    'summary' => 'Tipos de Evaluaciones no encontrando',
                     'detail' => 'Intenta de nuevo',
                     'code' => '404'
                 ]], 404);
@@ -28,7 +28,7 @@ class EvaluationTypeController extends Controller
         return response()->json(['data' => $evaluationTypes,
             'msg' => [
                 'summary' => 'Tipos de Evaluación',
-                'detail' => 'Se consulto correctamente tipos',
+                'detail' => 'Se consulto correctamente tipos de evaluación',
                 'code' => '200',
             ]], 200);
     }
@@ -82,7 +82,7 @@ class EvaluationTypeController extends Controller
             return response()->json([
                 'data' => null,
                 'msg' => [
-                    'summary' => 'Tipo de Evaluacion no encontrada',
+                    'summary' => 'Tipo de Evaluación no encontrada',
                     'detail' => 'Intenta de nuevo',
                     'code' => '404'
                 ]], 404);

@@ -78,8 +78,8 @@ class StudentEvaluationController extends Controller
         }
         return response()->json(['data' => $studentResult,
             'msg' => [
-                'summary' => 'Evaluacion de Estudiante a Docentes',
-                'detail' => 'Se completo correctamente evaluacion',
+                'summary' => 'Evaluación Exitosa!',
+                'detail' => 'Se completo correctamente evaluación Estudiante Docente',
                 'code' => '200',
             ]], 200);
     }

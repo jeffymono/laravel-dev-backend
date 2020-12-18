@@ -313,4 +313,37 @@ class EvaluationController extends Controller
                 'code' => '201',
             ]], 200);
     }
+    // public function registeredStudentEvaluation(Request $request)
+    // {
+    //     $evaluationTypeTeaching = EvaluationType::firstWhere('code', '5');
+    //     $evaluationTypeManagement = EvaluationType::firstWhere('code', '6');
+
+    //     $teacher = Teacher::firstWhere('user_id', $request->user_id); //Es Temporal, viene por un interceptor
+    //     $status = Catalogue::where('type', 'STATUS')->Where('code', '1')->first();
+    //     $schoolPeriod = SchoolPeriod::firstWhere('status_id', $status->id);//El id del status es Temporal
+
+    //     $evaluations = Evaluation::where(function ($query) use ($evaluationTypeTeaching,$evaluationTypeManagement) {
+    //         $query->where('evaluation_type_id', $evaluationTypeTeaching->id)
+    //         ->orWhere('evaluation_type_id', $evaluationTypeManagement->id);
+    //     })
+    //     ->where('teacher_id', $teacher->id)
+    //     ->where('school_period_id', $schoolPeriod->id)
+    //     ->where('status_id', $status->id)
+    //     ->get();
+    //     if (sizeof($evaluations)=== 0) {
+    //         return response()->json([
+    //             'data' => null,
+    //             'msg' => [
+    //                 'summary' => 'No hay autoEvaluación registrada',
+    //                 'detail' => 'Intenta de nuevo',
+    //                 'code' => '404'
+    //             ]], 404);
+    //     }
+    //     return response()->json(['data' => $evaluations,
+    //         'msg' => [
+    //             'summary' => 'AutoEvaluaciones',
+    //             'detail' => 'AutoEvaluacion ya está registrada',
+    //             'code' => '201',
+    //         ]], 200);
+    // }
 }

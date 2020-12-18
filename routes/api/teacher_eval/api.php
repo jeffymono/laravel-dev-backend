@@ -22,6 +22,8 @@ Route::apiResource('answers', AnswerController::class);
 Route::get('evaluations/registered_self_evaluations', [EvaluationController::class, 'registeredSelfEvaluation']);
 Route::get('evaluations/teacher_evaluations', [EvaluationController::class, 'teacherEvaluation']);
 
+
+
 Route::apiResource('evaluations', EvaluationController::class);
 Route::apiResource('detail_evaluations', DetailEvaluationController::class);
 Route::apiResource('student_evaluations', StudentEvaluationController::class);
