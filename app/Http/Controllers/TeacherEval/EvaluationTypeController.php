@@ -79,13 +79,13 @@ class EvaluationTypeController extends Controller
                     'detail' => 'Intenta de nuevo',
                     'code' => '400'
                 ]], 400);
-            // return response()->json([
-            //     'data' => null,
-            //     'msg' => [
-            //         'summary' => 'Tipo de Evaluacion no encontrada',
-            //         'detail' => 'Intenta de nuevo',
-            //         'code' => '404'
-            //     ]], 404);
+            return response()->json([
+                'data' => null,
+                'msg' => [
+                    'summary' => 'Tipo de Evaluacion no encontrada',
+                    'detail' => 'Intenta de nuevo',
+                    'code' => '404'
+                ]], 404);
                 
                 
         }
