@@ -65,41 +65,53 @@ class AnswerController extends Controller
         $state = State::firstWhere('code', $catalogues['state']['type']['active']);
         $status = Catalogue::find($dataStatus['id']);
        
-        $answer = new Answer();
-        $answer->code = $dataAnswer['code'];
-        $answer->order = $dataAnswer['order'];
-        $answer->name = $dataAnswer['name'];
-        $answer->value = $dataAnswer['value'];
+        $existAnswer =  Answer::where('code',$dataAnswer['code'])->orWhere('name',$dataAnswer['name'])->orWhere('order',$dataAnswer['order'])->first();
+        $answer= null;
+        if (!$existAnswer) {
+            $answer = new Answer();
+            $answer->code = $dataAnswer['code'];
+            $answer->order = $dataAnswer['order'];
+            $answer->name = $dataAnswer['name'];
+            $answer->value = $dataAnswer['value'];
 
-        $answer->state()->associate($state);
-        $answer->status()->associate($status);
-        $answer->save();
+            $answer->state()->associate($state);
+            $answer->status()->associate($status);
+            $answer->save();
 
-        $answerQuestionHasAnswer = AnswerQuestion::firstWhere("answer_id",Answer::firstWhere('code',$dataAnswer['code'])->id);
-        $questions = Question::where('status_id', $status->id)->get();
-        if(!$answerQuestionHasAnswer&& sizeof($questions)!==0){
-            $questionsIds = array();
-            $status = Catalogue::where('type','STATUS')->Where('code','1')->first();
-            foreach ($questions as $question) {
-                array_push($questionsIds,$question->id);
+            $answerQuestionHasAnswer = AnswerQuestion::firstWhere("answer_id", Answer::firstWhere('code', $dataAnswer['code'])->id);
+            $questions = Question::where('status_id', $status->id)->get();
+            if (!$answerQuestionHasAnswer&& sizeof($questions)!==0) {
+                $questionsIds = array();
+                $status = Catalogue::where('type', 'STATUS')->Where('code', '1')->first();
+                foreach ($questions as $question) {
+                    array_push($questionsIds, $question->id);
+                }
+                $answer->questions()->attach($questionsIds);
             }
-            $answer->questions()->attach( $questionsIds); 
-        }
-        if (!$answer) {
-            return response()->json([
+        
+            if (!$answer) {
+                return response()->json([
                 'data' => null,
                 'msg' => [
                     'summary' => 'Respuestas no encontradas',
                     'detail' => 'Intenta de nuevo',
                     'code' => '404'
                 ]], 404);
-        }
-        return response()->json(['data' => $answer,
+            }
+            return response()->json(['data' => $answer,
             'msg' => [
                 'summary' => 'Respuestas',
                 'detail' => 'Se creó correctamente las respuestas',
                 'code' => '201',
             ]], 201);
+        }else{
+            return response()->json(['data' => $answer,
+            'msg' => [
+                'summary' => 'Respuestas',
+                'detail' => 'La respuesta ya está registrada',
+                'code' => '400',
+            ]], 400);
+        }
     }
 
     public function update(Request $request, $id)
@@ -142,7 +154,7 @@ class AnswerController extends Controller
     {
         $answer = Answer::findOrFail($id);
 
-        $answer->state_id = '3';
+        $answer->state_id = '2';
         $answer->save();
 
         if (!$answer) {
